@@ -1,0 +1,30 @@
+===
+min jinja
+===
+
+{{ config(required_tests='None') }}
+select * from {{ ref('table') }}
+
+---
+
+(source_file
+  (jinja_block
+    (jinja_expr
+      (jinja_fn_call
+        (jinja_identifier)
+        (jinja_argument_list
+          (jinja_kwarg
+            (jinja_identifier)
+            (jinja_expr
+              (jinja_lit_string)))))))
+  (sql_select_statement
+    (sql_select
+      (sql_column_list)
+      (sql_from_clause
+        (jinja_block
+          (jinja_expr
+            (jinja_fn_call
+              (jinja_identifier)
+              (jinja_argument_list
+                (jinja_expr
+                  (jinja_lit_string))))))))))
