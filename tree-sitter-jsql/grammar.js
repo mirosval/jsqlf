@@ -1,3 +1,18 @@
+function sql_kw(word) {
+    //return word // when debuging
+    return alias(reserved(caseInsensitive(word)), word)
+}
+
+function reserved(regex) {
+    return token(prec(1, new RegExp(regex)))
+}
+
+function caseInsensitive(word) {
+    return word.split('')
+        .map(letter => `[${letter}${letter.toUpperCase()}]`)
+        .join('')
+}
+
 function commaSep1(rule) {
     return sep1(rule, ',');
 }
@@ -11,8 +26,11 @@ module.exports = grammar({
 
   rules: {
     // TODO: add the actual grammar rules
-    source_file: $ => seq(
-      optional($.jinja_block),
+    source_file: $ => choice(
+      seq(
+        $.jinja_block,
+        $.sql_select_statement,
+      ),
       $.sql_select_statement,
     ),
 
@@ -104,11 +122,11 @@ module.exports = grammar({
     ),
 
     sql_cte: $ => seq(
-      'with',
+      sql_kw('with'),
       repeat(
         seq(
           $.sql_identifier,
-          'as',
+          sql_kw('as'),
           '(',
           $.sql_select,
           ')',
@@ -118,7 +136,7 @@ module.exports = grammar({
     ),
 
     sql_select: $ => seq(
-      'select',
+      sql_kw('select'),
       $.sql_column_list,
       $.sql_from_clause,
     ),
@@ -131,8 +149,15 @@ module.exports = grammar({
     sql_column_list: $ => '*',
 
     sql_from_clause: $ => seq(
-      'from',
-      $.jinja_block,
+      sql_kw('from'),
+      field('table', choice(
+        $.jinja_block,
+        $.sql_table_name,
+      ))
     ),
+
+    sql_table_name: $ => $.sql_identifier,
+
+    sql_identifier: $ => /[a-zA-Z0-9_]+/,
   }
 });

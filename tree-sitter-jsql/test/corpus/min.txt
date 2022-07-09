@@ -28,3 +28,18 @@ select * from {{ ref('table') }}
               (jinja_argument_list
                 (jinja_expr
                   (jinja_lit_string))))))))))
+
+===
+min sql casing
+===
+
+SELECT * From table
+
+---
+
+(source_file
+  (sql_select_statement
+    (sql_select
+      (sql_column_list)
+      (sql_from_clause
+        table: (sql_table_name (sql_identifier))))))
