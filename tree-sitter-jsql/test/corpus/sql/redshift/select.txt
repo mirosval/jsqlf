@@ -1,0 +1,29 @@
+===
+redshift select with min
+===
+
+with venuecopy as (select * from venue)
+select * from venuecopy order by 1 limit 10
+
+---
+
+(source_file
+  (sql_select_statement
+    (sql_cte
+      (sql_identifier)
+      (sql_select
+        (sql_column_list)
+        (sql_from_clause
+          (sql_table_name
+            (sql_identifier)))))
+    (sql_select
+      (sql_column_list)
+      (sql_from_clause
+        (sql_table_name
+          (sql_identifier)))
+      (sql_order_by_clause
+        (sql_order_by_expression
+          (sql_identifier)))
+      (sql_limit_clause
+        (sql_integer)))))
+

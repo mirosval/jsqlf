@@ -202,6 +202,21 @@
     }
   },
   {
+    "type": "sql_column_list",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "sql_identifier",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "sql_cte",
     "named": true,
     "fields": {},
@@ -241,6 +256,51 @@
     }
   },
   {
+    "type": "sql_limit_clause",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "sql_integer",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "sql_order_by_clause",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "sql_order_by_expression",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "sql_order_by_expression",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "sql_identifier",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "sql_select",
     "named": true,
     "fields": {},
@@ -254,6 +314,14 @@
         },
         {
           "type": "sql_from_clause",
+          "named": true
+        },
+        {
+          "type": "sql_limit_clause",
+          "named": true
+        },
+        {
+          "type": "sql_order_by_clause",
           "named": true
         }
       ]
@@ -310,6 +378,10 @@
     "named": false
   },
   {
+    "type": "*",
+    "named": false
+  },
+  {
     "type": ",",
     "named": false
   },
@@ -342,6 +414,10 @@
     "named": false
   },
   {
+    "type": "by",
+    "named": false
+  },
+  {
     "type": "from",
     "named": false
   },
@@ -350,15 +426,23 @@
     "named": true
   },
   {
+    "type": "limit",
+    "named": false
+  },
+  {
+    "type": "order",
+    "named": false
+  },
+  {
     "type": "select",
     "named": false
   },
   {
-    "type": "sql_column_list",
+    "type": "sql_identifier",
     "named": true
   },
   {
-    "type": "sql_identifier",
+    "type": "sql_integer",
     "named": true
   },
   {

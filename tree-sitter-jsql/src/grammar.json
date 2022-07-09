@@ -477,41 +477,107 @@
       ]
     },
     "sql_select": {
-      "type": "SEQ",
-      "members": [
-        {
-          "type": "ALIAS",
-          "content": {
-            "type": "TOKEN",
+      "type": "PREC_RIGHT",
+      "value": 0,
+      "content": {
+        "type": "SEQ",
+        "members": [
+          {
+            "type": "ALIAS",
             "content": {
-              "type": "PREC",
-              "value": 1,
+              "type": "TOKEN",
               "content": {
-                "type": "PATTERN",
-                "value": "[sS][eE][lL][eE][cC][tT]"
+                "type": "PREC",
+                "value": 1,
+                "content": {
+                  "type": "PATTERN",
+                  "value": "[sS][eE][lL][eE][cC][tT]"
+                }
               }
-            }
+            },
+            "named": false,
+            "value": "select"
           },
-          "named": false,
-          "value": "select"
-        },
-        {
-          "type": "SYMBOL",
-          "name": "sql_column_list"
-        },
-        {
-          "type": "SYMBOL",
-          "name": "sql_from_clause"
-        }
-      ]
+          {
+            "type": "SYMBOL",
+            "name": "sql_column_list"
+          },
+          {
+            "type": "SYMBOL",
+            "name": "sql_from_clause"
+          },
+          {
+            "type": "CHOICE",
+            "members": [
+              {
+                "type": "SYMBOL",
+                "name": "sql_order_by_clause"
+              },
+              {
+                "type": "BLANK"
+              }
+            ]
+          },
+          {
+            "type": "CHOICE",
+            "members": [
+              {
+                "type": "SYMBOL",
+                "name": "sql_limit_clause"
+              },
+              {
+                "type": "BLANK"
+              }
+            ]
+          }
+        ]
+      }
     },
     "sql_identifier": {
       "type": "PATTERN",
       "value": "[a-zA-Z0-9_]+"
     },
     "sql_column_list": {
-      "type": "STRING",
-      "value": "*"
+      "type": "CHOICE",
+      "members": [
+        {
+          "type": "STRING",
+          "value": "*"
+        },
+        {
+          "type": "SEQ",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "sql_identifier"
+            },
+            {
+              "type": "CHOICE",
+              "members": [
+                {
+                  "type": "REPEAT",
+                  "content": {
+                    "type": "SEQ",
+                    "members": [
+                      {
+                        "type": "STRING",
+                        "value": ","
+                      },
+                      {
+                        "type": "SYMBOL",
+                        "name": "sql_identifier"
+                      }
+                    ]
+                  }
+                },
+                {
+                  "type": "BLANK"
+                }
+              ]
+            }
+          ]
+        }
+      ]
     },
     "sql_from_clause": {
       "type": "SEQ",
@@ -551,9 +617,104 @@
         }
       ]
     },
+    "sql_order_by_clause": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "ALIAS",
+          "content": {
+            "type": "TOKEN",
+            "content": {
+              "type": "PREC",
+              "value": 1,
+              "content": {
+                "type": "PATTERN",
+                "value": "[oO][rR][dD][eE][rR]"
+              }
+            }
+          },
+          "named": false,
+          "value": "order"
+        },
+        {
+          "type": "ALIAS",
+          "content": {
+            "type": "TOKEN",
+            "content": {
+              "type": "PREC",
+              "value": 1,
+              "content": {
+                "type": "PATTERN",
+                "value": "[bB][yY]"
+              }
+            }
+          },
+          "named": false,
+          "value": "by"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "sql_order_by_expression"
+        }
+      ]
+    },
+    "sql_order_by_expression": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "sql_identifier"
+        },
+        {
+          "type": "REPEAT",
+          "content": {
+            "type": "SEQ",
+            "members": [
+              {
+                "type": "STRING",
+                "value": ","
+              },
+              {
+                "type": "SYMBOL",
+                "name": "sql_identifier"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "sql_limit_clause": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "ALIAS",
+          "content": {
+            "type": "TOKEN",
+            "content": {
+              "type": "PREC",
+              "value": 1,
+              "content": {
+                "type": "PATTERN",
+                "value": "[lL][iI][mM][iI][tT]"
+              }
+            }
+          },
+          "named": false,
+          "value": "limit"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "sql_integer"
+        }
+      ]
+    },
     "sql_table_name": {
       "type": "SYMBOL",
       "name": "sql_identifier"
+    },
+    "sql_integer": {
+      "type": "PATTERN",
+      "value": "[0-9]+"
     }
   },
   "extras": [

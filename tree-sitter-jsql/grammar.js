@@ -135,10 +135,14 @@ module.exports = grammar({
       )
     ),
 
-    sql_select: $ => seq(
-      sql_kw('select'),
-      $.sql_column_list,
-      $.sql_from_clause,
+    sql_select: $ => prec.right(
+      seq(
+        sql_kw('select'),
+        $.sql_column_list,
+        $.sql_from_clause,
+        optional($.sql_order_by_clause),
+        optional($.sql_limit_clause),
+      ),
     ),
 
     sql_identifier: $ => token(new RegExp(
@@ -146,7 +150,20 @@ module.exports = grammar({
         '[a-zA-Z0-9_]*'   // all following characters must be a lower or upper letter, digit, or underscore.
     )),
 
-    sql_column_list: $ => '*',
+    sql_column_list: $ => choice(
+      '*',
+      seq(
+        $.sql_identifier,
+        optional(
+          repeat(
+            seq(
+              ',',
+              $.sql_identifier,
+            )
+          )
+        )
+      )
+    ),
 
     sql_from_clause: $ => seq(
       sql_kw('from'),
@@ -156,8 +173,28 @@ module.exports = grammar({
       ))
     ),
 
+    sql_order_by_clause: $ => seq(
+      sql_kw('order'),
+      sql_kw('by'),
+      $.sql_order_by_expression,
+    ),
+
+    sql_order_by_expression: $ => seq(
+      $.sql_identifier,
+      repeat(
+        seq(',', $.sql_identifier)
+      )
+    ),
+
+    sql_limit_clause: $ => seq(
+      sql_kw('limit'),
+      $.sql_integer,
+    ),
+
     sql_table_name: $ => $.sql_identifier,
 
     sql_identifier: $ => /[a-zA-Z0-9_]+/,
+
+    sql_integer: $ => /[0-9]+/,
   }
 });
