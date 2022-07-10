@@ -117,42 +117,38 @@ module.exports = grammar({
     )),
 
     sql_select_statement: $ => seq(
-      repeat($.sql_cte),
-      $.sql_select,
+      optional($.sql_with_clause),
+      $.sql_select_clause,
+      optional($.sql_from_clause),
+      optional($.sql_order_by_clause),
+      optional($.sql_limit_clause),
     ),
 
-    sql_cte: $ => seq(
+    sql_with_clause: $ => seq(
       sql_kw('with'),
-      seq(
-        $.sql_cte_name,
-        sql_kw('as'),
-        '(',
-        $.sql_select,
-        ')',
-        optional(',')
-      ),
+      $.sql_cte,
       repeat(
         seq(
           ',',
-          $.sql_cte_name,
-          sql_kw('as'),
-          '(',
-          $.sql_select,
-          ')',
-          optional(',')
+          $.sql_cte
         )
       )
     ),
 
+    sql_cte: $ => seq(
+      $.sql_cte_name,
+      sql_kw('as'),
+      '(',
+      $.sql_select_statement,
+      ')',
+    ),
+
     sql_cte_name: $ => $.sql_identifier,
 
-    sql_select: $ => prec.right(
+    sql_select_clause: $ => prec.right(
       seq(
         sql_kw('select'),
         $.sql_column_list,
-        $.sql_from_clause,
-        optional($.sql_order_by_clause),
-        optional($.sql_limit_clause),
       ),
     ),
 
@@ -164,13 +160,11 @@ module.exports = grammar({
     sql_column_list: $ => choice(
       '*',
       seq(
-        $.sql_identifier,
-        optional(
-          repeat(
-            seq(
-              ',',
-              $.sql_identifier,
-            )
+        $.sql_expr,
+        repeat(
+          seq(
+            ',',
+            $.sql_expr,
           )
         )
       )
@@ -214,6 +208,7 @@ module.exports = grammar({
     sql_expr: $ => choice(
       $.sql_identifier,
       $.sql_alias,
+      $.sql_fn,
     ),
 
     sql_alias: $ => seq(
@@ -224,7 +219,9 @@ module.exports = grammar({
 
     sql_fn: $ => seq(
       $.sql_identifier,
+      '(',
       $.sql_arg_list,
+      ')',
     ),
 
     sql_arg_list: $ => seq(

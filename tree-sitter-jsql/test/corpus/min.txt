@@ -18,16 +18,16 @@ select * from {{ ref('table') }}
             (jinja_expr
               (jinja_lit_string)))))))
   (sql_select_statement
-    (sql_select
-      (sql_column_list)
-      (sql_from_clause
-        (jinja_block
-          (jinja_expr
-            (jinja_fn_call
-              (jinja_identifier)
-              (jinja_argument_list
-                (jinja_expr
-                  (jinja_lit_string))))))))))
+    (sql_select_clause
+      (sql_column_list))
+    (sql_from_clause
+      (jinja_block
+        (jinja_expr
+          (jinja_fn_call
+            (jinja_identifier)
+            (jinja_argument_list
+              (jinja_expr
+                (jinja_lit_string)))))))))
 
 ===
 min sql casing
@@ -39,10 +39,10 @@ SELECT * From table
 
 (source_file
   (sql_select_statement
-    (sql_select
-      (sql_column_list)
-      (sql_from_clause
-        (sql_table_name (sql_identifier))))))
+    (sql_select_clause
+      (sql_column_list))
+    (sql_from_clause
+      (sql_table_name (sql_identifier)))))
 
 ===
 sql min select multiple from tables
@@ -54,13 +54,13 @@ select * from t1, t2
 
 (source_file
   (sql_select_statement
-    (sql_select
-      (sql_column_list)
-      (sql_from_clause
-        (sql_table_name
-          (sql_identifier))
-        (sql_table_name
-          (sql_identifier))))))
+    (sql_select_clause
+      (sql_column_list))
+    (sql_from_clause
+      (sql_table_name
+        (sql_identifier))
+      (sql_table_name
+        (sql_identifier)))))
 
 ===
 sql min select table alias
@@ -72,9 +72,31 @@ select * from t1 as t
 
 (source_file
   (sql_select_statement
-    (sql_select
-      (sql_column_list)
-      (sql_from_clause
-        (sql_table_name
-          (sql_identifier)
-          (sql_identifier))))))
+    (sql_select_clause
+      (sql_column_list))
+    (sql_from_clause
+      (sql_table_name
+        (sql_identifier)
+        (sql_identifier)))))
+
+===
+sql min select fn
+===
+
+select min(1) as c
+
+---
+
+(source_file
+  (sql_select_statement
+    (sql_select_clause
+      (sql_column_list
+        (sql_expr
+          (sql_alias
+            (sql_expr
+              (sql_fn
+                (sql_identifier)
+                (sql_arg_list
+                  (sql_expr
+                    (sql_identifier)))))
+            (sql_identifier)))))))
