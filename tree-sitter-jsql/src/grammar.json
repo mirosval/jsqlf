@@ -423,13 +423,66 @@
           "value": "with"
         },
         {
+          "type": "SEQ",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "sql_cte_name"
+            },
+            {
+              "type": "ALIAS",
+              "content": {
+                "type": "TOKEN",
+                "content": {
+                  "type": "PREC",
+                  "value": 1,
+                  "content": {
+                    "type": "PATTERN",
+                    "value": "[aA][sS]"
+                  }
+                }
+              },
+              "named": false,
+              "value": "as"
+            },
+            {
+              "type": "STRING",
+              "value": "("
+            },
+            {
+              "type": "SYMBOL",
+              "name": "sql_select"
+            },
+            {
+              "type": "STRING",
+              "value": ")"
+            },
+            {
+              "type": "CHOICE",
+              "members": [
+                {
+                  "type": "STRING",
+                  "value": ","
+                },
+                {
+                  "type": "BLANK"
+                }
+              ]
+            }
+          ]
+        },
+        {
           "type": "REPEAT",
           "content": {
             "type": "SEQ",
             "members": [
               {
+                "type": "STRING",
+                "value": ","
+              },
+              {
                 "type": "SYMBOL",
-                "name": "sql_identifier"
+                "name": "sql_cte_name"
               },
               {
                 "type": "ALIAS",
@@ -475,6 +528,10 @@
           }
         }
       ]
+    },
+    "sql_cte_name": {
+      "type": "SYMBOL",
+      "name": "sql_identifier"
     },
     "sql_select": {
       "type": "PREC_RIGHT",
@@ -599,18 +656,39 @@
           "value": "from"
         },
         {
-          "type": "FIELD",
-          "name": "table",
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "jinja_block"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "sql_table_name"
+            }
+          ]
+        },
+        {
+          "type": "REPEAT",
           "content": {
-            "type": "CHOICE",
+            "type": "SEQ",
             "members": [
               {
-                "type": "SYMBOL",
-                "name": "jinja_block"
+                "type": "STRING",
+                "value": ","
               },
               {
-                "type": "SYMBOL",
-                "name": "sql_table_name"
+                "type": "CHOICE",
+                "members": [
+                  {
+                    "type": "SYMBOL",
+                    "name": "jinja_block"
+                  },
+                  {
+                    "type": "SYMBOL",
+                    "name": "sql_table_name"
+                  }
+                ]
               }
             ]
           }
@@ -705,6 +783,86 @@
         {
           "type": "SYMBOL",
           "name": "sql_integer"
+        }
+      ]
+    },
+    "sql_expr": {
+      "type": "CHOICE",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "sql_identifier"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "sql_alias"
+        }
+      ]
+    },
+    "sql_alias": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "sql_expr"
+        },
+        {
+          "type": "ALIAS",
+          "content": {
+            "type": "TOKEN",
+            "content": {
+              "type": "PREC",
+              "value": 1,
+              "content": {
+                "type": "PATTERN",
+                "value": "[aA][sS]"
+              }
+            }
+          },
+          "named": false,
+          "value": "as"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "sql_identifier"
+        }
+      ]
+    },
+    "sql_fn": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "sql_identifier"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "sql_arg_list"
+        }
+      ]
+    },
+    "sql_arg_list": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "sql_expr"
+        },
+        {
+          "type": "REPEAT",
+          "content": {
+            "type": "SEQ",
+            "members": [
+              {
+                "type": "STRING",
+                "value": ","
+              },
+              {
+                "type": "SYMBOL",
+                "name": "sql_expr"
+              }
+            ]
+          }
         }
       ]
     },

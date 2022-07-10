@@ -123,9 +123,18 @@ module.exports = grammar({
 
     sql_cte: $ => seq(
       sql_kw('with'),
+      seq(
+        $.sql_cte_name,
+        sql_kw('as'),
+        '(',
+        $.sql_select,
+        ')',
+        optional(',')
+      ),
       repeat(
         seq(
-          $.sql_identifier,
+          ',',
+          $.sql_cte_name,
           sql_kw('as'),
           '(',
           $.sql_select,
@@ -134,6 +143,8 @@ module.exports = grammar({
         )
       )
     ),
+
+    sql_cte_name: $ => $.sql_identifier,
 
     sql_select: $ => prec.right(
       seq(
@@ -167,10 +178,19 @@ module.exports = grammar({
 
     sql_from_clause: $ => seq(
       sql_kw('from'),
-      field('table', choice(
+      choice(
         $.jinja_block,
         $.sql_table_name,
-      ))
+      ),
+      repeat(
+        seq(
+          ',',
+          choice(
+            $.jinja_block,
+            $.sql_table_name,
+          ),
+        )
+      )
     ),
 
     sql_order_by_clause: $ => seq(
@@ -189,6 +209,32 @@ module.exports = grammar({
     sql_limit_clause: $ => seq(
       sql_kw('limit'),
       $.sql_integer,
+    ),
+
+    sql_expr: $ => choice(
+      $.sql_identifier,
+      $.sql_alias,
+    ),
+
+    sql_alias: $ => seq(
+      $.sql_expr,
+      sql_kw('as'),
+      $.sql_identifier
+    ),
+
+    sql_fn: $ => seq(
+      $.sql_identifier,
+      $.sql_arg_list,
+    ),
+
+    sql_arg_list: $ => seq(
+      $.sql_expr,
+      repeat(
+        seq(
+          ',',
+          $.sql_expr
+        )
+      )
     ),
 
     sql_table_name: $ => $.sql_identifier,

@@ -42,4 +42,22 @@ SELECT * From table
     (sql_select
       (sql_column_list)
       (sql_from_clause
-        table: (sql_table_name (sql_identifier))))))
+        (sql_table_name (sql_identifier))))))
+
+===
+sql min select multiple from tables
+===
+
+select * from t1, t2
+
+---
+
+(source_file
+  (sql_select_statement
+    (sql_select
+      (sql_column_list)
+      (sql_from_clause
+        (sql_table_name
+          (sql_identifier))
+        (sql_table_name
+          (sql_identifier))))))
