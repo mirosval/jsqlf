@@ -100,3 +100,28 @@ select min(1) as c
                   (sql_expr
                     (sql_identifier)))))
             (sql_identifier)))))))
+
+===
+sql min select where clause 
+===
+
+select * from a
+where a = 'a'
+
+---
+
+(source_file
+  (sql_select_statement
+    (sql_select_clause
+      (sql_column_list))
+    (sql_from_clause
+      (sql_table_name
+        (sql_identifier)))
+    (sql_where_clause
+      (sql_expr
+        (sql_binary_expression
+          (sql_expr
+            (sql_identifier))
+          (sql_expr
+            (sql_string
+              (content))))))))

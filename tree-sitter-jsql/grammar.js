@@ -1,3 +1,29 @@
+const PREC = {
+  primary: 8,
+  unary: 7,
+  exp: 6,
+  multiplicative: 5,
+  additive: 4,
+  comparative: 3,
+  and: 2,
+  or: 1,
+};
+const multiplicative_operators = ["*", "/", "%", "<<", ">>", "&"];
+const additive_operators = ["+", "-", "|", "#"];
+const comparative_operators = [
+  "<",
+  "<=",
+  "<>",
+  "!=",
+  "=",
+  ">",
+  ">=",
+  "~",
+  "!~",
+  "~*",
+  "!~*",
+];
+
 function sql_kw(word) {
     //return word // when debuging
     return alias(reserved(caseInsensitive(word)), word)
@@ -22,7 +48,14 @@ function sep1(rule, separator) {
 }
 
 module.exports = grammar({
-  name: 'jsql',
+  name: 'jsql', 
+
+  extras: $ => [$.comment, /[\s\f\uFEFF\u2060\u200B]|\\\r?\n/],
+  externals: $ => [
+    // $._dollar_quoted_string_tag,
+    // $._dollar_quoted_string_content,
+    // $._dollar_quoted_string_end_tag,
+  ],
 
   rules: {
     // TODO: add the actual grammar rules
@@ -120,6 +153,7 @@ module.exports = grammar({
       optional($.sql_with_clause),
       $.sql_select_clause,
       optional($.sql_from_clause),
+      optional($.sql_where_clause),
       optional($.sql_order_by_clause),
       optional($.sql_limit_clause),
     ),
@@ -187,6 +221,11 @@ module.exports = grammar({
       )
     ),
 
+    sql_where_clause: $ => seq(
+      sql_kw('where'),
+      $.sql_expr,
+    ),
+
     sql_order_by_clause: $ => seq(
       sql_kw('order'),
       sql_kw('by'),
@@ -209,7 +248,40 @@ module.exports = grammar({
       $.sql_identifier,
       $.sql_alias,
       $.sql_fn,
+      $.sql_string,
+      $.sql_binary_expression,
     ),
+
+    sql_string: $ => //choice(
+      seq("'", field("content", alias(/(''|[^'])*/, $.content)), "'"),
+    //   seq(
+    //     $._dollar_quoted_string_tag,
+    //     field("content", alias($._dollar_quoted_string_content, $.content)),
+    //     $._dollar_quoted_string_end_tag,
+    //   ),
+    // ),
+
+    sql_binary_expression: $ => {
+      const table = [
+        [PREC.exp, "^"],
+        [PREC.multiplicative, choice(...multiplicative_operators)],
+        [PREC.additive, choice(...additive_operators)],
+        [PREC.comparative, choice(...comparative_operators)],
+      ];
+
+      return choice(
+        ...table.map(([precedence, operator]) =>
+          prec.left(
+            precedence,
+            seq(
+              field("left", $.sql_expr),
+              field("operator", operator),
+              field("right", $.sql_expr),
+            ),
+          ),
+        ),
+      );
+    },
 
     sql_alias: $ => seq(
       $.sql_expr,
@@ -247,5 +319,10 @@ module.exports = grammar({
     sql_identifier: $ => /[a-zA-Z0-9_]+/,
 
     sql_integer: $ => /[0-9]+/,
+
+    // http://stackoverflow.com/questions/13014947/regex-to-match-a-c-style-multiline-comment/36328890#36328890
+    comment: $ => token(
+      choice(seq("--", /.*/), seq("/*", /[^*]*\*+([^/*][^*]*\*+)*/, "/")),
+    ),
   }
 });
