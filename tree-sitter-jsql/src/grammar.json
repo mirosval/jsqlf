@@ -867,8 +867,54 @@
       ]
     },
     "sql_table_name": {
-      "type": "SYMBOL",
-      "name": "sql_identifier"
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "sql_identifier"
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SEQ",
+              "members": [
+                {
+                  "type": "CHOICE",
+                  "members": [
+                    {
+                      "type": "ALIAS",
+                      "content": {
+                        "type": "TOKEN",
+                        "content": {
+                          "type": "PREC",
+                          "value": 1,
+                          "content": {
+                            "type": "PATTERN",
+                            "value": "[aA][sS]"
+                          }
+                        }
+                      },
+                      "named": false,
+                      "value": "as"
+                    },
+                    {
+                      "type": "BLANK"
+                    }
+                  ]
+                },
+                {
+                  "type": "SYMBOL",
+                  "name": "sql_identifier"
+                }
+              ]
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
+        }
+      ]
     },
     "sql_integer": {
       "type": "PATTERN",

@@ -237,7 +237,15 @@ module.exports = grammar({
       )
     ),
 
-    sql_table_name: $ => $.sql_identifier,
+    sql_table_name: $ => seq(
+      $.sql_identifier,
+      optional(
+        seq(
+          optional(sql_kw('as')),
+          $.sql_identifier,
+        )
+      )
+    ),
 
     sql_identifier: $ => /[a-zA-Z0-9_]+/,
 

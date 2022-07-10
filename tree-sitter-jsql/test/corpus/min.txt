@@ -61,3 +61,20 @@ select * from t1, t2
           (sql_identifier))
         (sql_table_name
           (sql_identifier))))))
+
+===
+sql min select table alias
+===
+
+select * from t1 as t
+
+---
+
+(source_file
+  (sql_select_statement
+    (sql_select
+      (sql_column_list)
+      (sql_from_clause
+        (sql_table_name
+          (sql_identifier)
+          (sql_identifier))))))
