@@ -353,6 +353,10 @@
           "named": true
         },
         {
+          "type": "sql_in_expr",
+          "named": true
+        },
+        {
           "type": "sql_string",
           "named": true
         }
@@ -392,6 +396,10 @@
           "named": true
         },
         {
+          "type": "sql_in_expr",
+          "named": true
+        },
+        {
           "type": "sql_string",
           "named": true
         }
@@ -428,6 +436,10 @@
           },
           {
             "type": "sql_identifier",
+            "named": true
+          },
+          {
+            "type": "sql_in_expr",
             "named": true
           },
           {
@@ -559,6 +571,10 @@
             "named": true
           },
           {
+            "type": "sql_in_expr",
+            "named": true
+          },
+          {
             "type": "sql_string",
             "named": true
           }
@@ -599,6 +615,10 @@
           "named": true
         },
         {
+          "type": "sql_in_expr",
+          "named": true
+        },
+        {
           "type": "sql_string",
           "named": true
         }
@@ -635,6 +655,10 @@
         },
         {
           "type": "sql_identifier",
+          "named": true
+        },
+        {
+          "type": "sql_in_expr",
           "named": true
         },
         {
@@ -794,6 +818,53 @@
       "types": [
         {
           "type": "sql_identifier",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "sql_in_expr",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "sql_alias",
+          "named": true
+        },
+        {
+          "type": "sql_binary_expr",
+          "named": true
+        },
+        {
+          "type": "sql_boolean_expr",
+          "named": true
+        },
+        {
+          "type": "sql_dotted_identifier",
+          "named": true
+        },
+        {
+          "type": "sql_fn",
+          "named": true
+        },
+        {
+          "type": "sql_identifier",
+          "named": true
+        },
+        {
+          "type": "sql_in_expr",
+          "named": true
+        },
+        {
+          "type": "sql_statement",
+          "named": true
+        },
+        {
+          "type": "sql_string",
           "named": true
         }
       ]
@@ -1019,6 +1090,10 @@
           "named": true
         },
         {
+          "type": "sql_in_expr",
+          "named": true
+        },
+        {
           "type": "sql_string",
           "named": true
         }
@@ -1202,6 +1277,10 @@
   },
   {
     "type": "group",
+    "named": false
+  },
+  {
+    "type": "in",
     "named": false
   },
   {

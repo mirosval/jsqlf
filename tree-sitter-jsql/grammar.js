@@ -335,6 +335,7 @@ module.exports = grammar({
       $.sql_string,
       $.sql_binary_expr,
       $.sql_boolean_expr,
+      $.sql_in_expr,
     ),
 
     sql_string: $ => //choice(
@@ -372,6 +373,14 @@ module.exports = grammar({
       prec.left(PREC.unary, seq(sql_kw('not'), $._sql_expr)),
       prec.left(PREC.and, seq($._sql_expr, sql_kw('and'), $._sql_expr)),
       prec.left(PREC.or, seq($._sql_expr, sql_kw('or'), $._sql_expr)),
+    ),
+
+    sql_in_expr: $ => seq(
+      $._sql_expr,
+      sql_kw('in'),
+      '(',
+      $.sql_statement,
+      ')',
     ),
 
     sql_alias: $ => seq(

@@ -123,7 +123,85 @@ order by venuename
 
 ---
 
-()
+(source_file
+ (sql_statement
+  (sql_select_statement
+   (sql_with_clause
+    (sql_cte
+     (sql_cte_name
+      (sql_identifier))
+     (sql_statement
+      (sql_select_statement
+       (sql_select_clause
+        (sql_column_list
+         (sql_identifier))))))
+    (sql_cte
+     (sql_cte_name
+      (sql_identifier))
+     (sql_statement
+      (sql_select_statement
+       (sql_select_clause
+        (sql_column_list
+         (sql_identifier)))))))
+   (sql_select_clause
+    (sql_column_list
+     (sql_identifier)
+     (sql_identifier)
+     (sql_identifier)
+     (sql_alias
+      (sql_fn
+       (sql_identifier)
+       (sql_arg_list
+        (sql_identifier)))
+      (sql_identifier))
+     (sql_alias
+      (sql_fn
+       (sql_identifier)
+       (sql_arg_list
+        (sql_identifier)))
+      (sql_identifier))))
+   (sql_from_clause
+    (sql_table_name
+     (sql_identifier))
+    (sql_table_name
+     (sql_identifier))
+    (sql_table_name
+     (sql_identifier)))
+   (sql_where_clause
+    (sql_in_expr
+     (sql_boolean_expr
+      (sql_boolean_expr
+       (sql_binary_expr
+        (sql_dotted_identifier
+         (sql_identifier)
+         (sql_identifier))
+        (sql_dotted_identifier
+         (sql_identifier)
+         (sql_identifier)))
+       (sql_binary_expr
+        (sql_dotted_identifier
+         (sql_identifier)
+         (sql_identifier))
+        (sql_dotted_identifier
+         (sql_identifier)
+         (sql_identifier))))
+      (sql_identifier))
+     (sql_statement
+      (sql_select_statement
+       (sql_select_clause
+        (sql_column_list
+         (sql_identifier)))
+       (sql_from_clause
+        (sql_table_name
+         (sql_identifier)))))))
+    (sql_group_by_clause
+     (sql_group_by_expression
+      (sql_identifier)
+      (sql_identifier)
+      (sql_identifier)))
+    (sql_order_by_clause
+     (sql_order_by_expression
+      (sql_identifier))))))
 
 ===
 redshift select with recursive

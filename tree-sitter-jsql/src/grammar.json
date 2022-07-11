@@ -1167,6 +1167,10 @@
         {
           "type": "SYMBOL",
           "name": "sql_boolean_expr"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "sql_in_expr"
         }
       ]
     },
@@ -1517,6 +1521,43 @@
               }
             ]
           }
+        }
+      ]
+    },
+    "sql_in_expr": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "_sql_expr"
+        },
+        {
+          "type": "ALIAS",
+          "content": {
+            "type": "TOKEN",
+            "content": {
+              "type": "PREC",
+              "value": 1,
+              "content": {
+                "type": "PATTERN",
+                "value": "[iI][nN]"
+              }
+            }
+          },
+          "named": false,
+          "value": "in"
+        },
+        {
+          "type": "STRING",
+          "value": "("
+        },
+        {
+          "type": "SYMBOL",
+          "name": "sql_statement"
+        },
+        {
+          "type": "STRING",
+          "value": ")"
         }
       ]
     },
