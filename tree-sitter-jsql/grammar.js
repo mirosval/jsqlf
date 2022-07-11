@@ -8,6 +8,11 @@ const PREC = {
   and: 2,
   or: 1,
 };
+const UNION_PREC = {
+  UNION: 1,
+  EXCEPT: 1,
+  INTERSECT: 2,
+};
 const multiplicative_operators = ["*", "/", "%", "<<", ">>", "&"];
 const additive_operators = ["+", "-", "|", "#"];
 const comparative_operators = [
@@ -62,9 +67,9 @@ module.exports = grammar({
     source_file: $ => choice(
       seq(
         $.jinja_block,
-        $.sql_select_statement,
+        $.sql_statement,
       ),
-      $.sql_select_statement,
+      $.sql_statement,
     ),
 
     jinja_block: $ => seq(
@@ -149,6 +154,43 @@ module.exports = grammar({
         '[a-zA-Z0-9_]*'   // all following characters must be a lower or upper letter, digit, or underscore.
     )),
 
+    sql_statement: $ => choice(
+      $.sql_select_statement,
+      $.sql_union_statement,
+      $.sql_intersect_statement,
+      $.sql_except_statement,
+    ),
+
+    sql_union_statement: $ => prec.left(
+      UNION_PREC.UNION, 
+      seq(
+        $.sql_statement,
+        sql_kw('union'),
+        optional(sql_kw('all')),
+        $.sql_statement,
+      )
+    ),
+
+    sql_intersect_statement: $ => prec.left(
+      UNION_PREC.INTERSECT,
+      seq(
+        $.sql_statement,
+        sql_kw('intersect'),
+        optional(sql_kw('all')),
+        $.sql_statement,
+      )
+    ),
+
+    sql_except_statement: $ => prec.left(
+      UNION_PREC.EXCEPT,
+      seq(
+        $.sql_statement,
+        sql_kw('except'),
+        optional(sql_kw('all')),
+        $.sql_statement,
+      )
+    ),
+
     sql_select_statement: $ => seq(
       optional($.sql_with_clause),
       $.sql_select_clause,
@@ -171,12 +213,24 @@ module.exports = grammar({
     ),
 
     sql_cte: $ => seq(
-      $.sql_cte_name,
+      choice(
+        $.sql_cte_name,
+        $.sql_cte_recursive_name,
+      ),
       sql_kw('as'),
       '(',
-      $.sql_select_statement,
+      $.sql_statement,
       ')',
     ),
+
+    sql_cte_recursive_name: $ => seq(
+      sql_kw('recursive'),
+      $.sql_cte_name,
+      '(',
+      $.sql_column_list,
+      ')',
+    ),
+
 
     sql_cte_name: $ => $.sql_identifier,
 

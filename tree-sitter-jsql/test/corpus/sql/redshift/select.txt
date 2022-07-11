@@ -8,27 +8,29 @@ select * from venuecopy order by 1 limit 10
 ---
 
 (source_file
+ (sql_statement
   (sql_select_statement
-    (sql_with_clause
-        (sql_cte
-        (sql_cte_name
-            (sql_identifier))
-        (sql_select_statement
-          (sql_select_clause
-            (sql_column_list))
-          (sql_from_clause
-            (sql_table_name
-                (sql_identifier))))))
-    (sql_select_clause
-      (sql_column_list))
-    (sql_from_clause
-      (sql_table_name
-        (sql_identifier)))
-    (sql_order_by_clause
-      (sql_order_by_expression
-        (sql_identifier)))
-    (sql_limit_clause
-      (sql_integer))))
+   (sql_with_clause
+    (sql_cte
+     (sql_cte_name
+      (sql_identifier))
+     (sql_statement
+      (sql_select_statement
+       (sql_select_clause
+        (sql_column_list))
+       (sql_from_clause
+        (sql_table_name
+         (sql_identifier)))))))
+   (sql_select_clause
+    (sql_column_list))
+   (sql_from_clause
+    (sql_table_name
+     (sql_identifier)))
+   (sql_order_by_clause
+    (sql_order_by_expression
+     (sql_identifier)))
+   (sql_limit_clause
+    (sql_integer)))))
 
 ===
 redshift select with 2 ctes cte1
@@ -42,56 +44,57 @@ group by venuename, venuecity
 ---
 
 (source_file
- (sql_select_statement
-  (sql_select_clause
-   (sql_column_list
-    (sql_expr 
+ (sql_statement
+  (sql_select_statement
+   (sql_select_clause
+    (sql_column_list
+     (sql_expr 
+      (sql_identifier))
+     (sql_expr 
+      (sql_identifier))
+     (sql_expr 
+      (sql_alias
+       (sql_expr
+        (sql_fn
+         (sql_identifier)
+         (sql_arg_list
+          (sql_expr
+           (sql_identifier)))))
+       (sql_identifier)))))
+   (sql_from_clause
+    (sql_table_name
      (sql_identifier))
-    (sql_expr 
+    (sql_table_name
      (sql_identifier))
-    (sql_expr 
-     (sql_alias
+    (sql_table_name
+     (sql_identifier)))
+   (sql_where_clause
+    (sql_expr
+     (sql_boolean_expr
       (sql_expr
-       (sql_fn
-        (sql_identifier)
-        (sql_arg_list
-         (sql_expr
+       (sql_binary_expr
+        (sql_expr
+         (sql_dotted_identifier
+          (sql_identifier)
+          (sql_identifier)))
+        (sql_expr
+         (sql_dotted_identifier
+          (sql_identifier)
           (sql_identifier)))))
-      (sql_identifier)))))
-  (sql_from_clause
-   (sql_table_name
-    (sql_identifier))
-   (sql_table_name
-    (sql_identifier))
-   (sql_table_name
-    (sql_identifier)))
-  (sql_where_clause
-   (sql_expr
-    (sql_boolean_expr
-     (sql_expr
-      (sql_binary_expr
-       (sql_expr
-        (sql_dotted_identifier
-         (sql_identifier)
-         (sql_identifier)))
-       (sql_expr
-        (sql_dotted_identifier
-         (sql_identifier)
-         (sql_identifier)))))
-     (sql_expr
-      (sql_binary_expr
-       (sql_expr 
-        (sql_dotted_identifier 
-         (sql_identifier) 
-         (sql_identifier)))
-       (sql_expr 
-        (sql_dotted_identifier 
-         (sql_identifier) 
-         (sql_identifier))))))))
+      (sql_expr
+       (sql_binary_expr
+        (sql_expr 
+         (sql_dotted_identifier 
+          (sql_identifier) 
+          (sql_identifier)))
+        (sql_expr 
+         (sql_dotted_identifier 
+          (sql_identifier) 
+          (sql_identifier))))))))
     (sql_group_by_clause
      (sql_group_by_expression
       (sql_identifier)
-      (sql_identifier)))))
+      (sql_identifier))))))
 
 ===
 redshift select with 2 ctes cte2
@@ -104,21 +107,22 @@ where venuename_sales > 800000
 ---
 
 (source_file
- (sql_select_statement
-  (sql_select_clause
-   (sql_column_list
+ (sql_statement
+  (sql_select_statement
+   (sql_select_clause
+    (sql_column_list
+     (sql_expr
+      (sql_identifier))))
+   (sql_from_clause
+    (sql_table_name
+     (sql_identifier)))
+   (sql_where_clause
     (sql_expr
-     (sql_identifier))))
-  (sql_from_clause
-   (sql_table_name
-    (sql_identifier)))
-  (sql_where_clause
-   (sql_expr
-    (sql_binary_expr
-     (sql_expr
-      (sql_identifier))
-     (sql_expr
-      (sql_identifier)))))))
+     (sql_binary_expr
+      (sql_expr
+       (sql_identifier))
+      (sql_expr
+       (sql_identifier))))))))
 
 ===
 redshift select with 2 ctes
@@ -136,24 +140,27 @@ order by venuename
 ---
 
 (source_file
+ (sql_statement
  (sql_select_statement
   (sql_with_clause
    (sql_cte
     (sql_cte_name
      (sql_identifier))
-    (sql_select_statement
-     (sql_select_clause
-      (sql_column_list
-       (sql_expr 
-        (sql_identifier))))))
-   (sql_cte
-    (sql_cte_name
-     (sql_identifier))
+    (sql_statement
     (sql_select_statement
      (sql_select_clause
       (sql_column_list
        (sql_expr 
         (sql_identifier)))))))
+   (sql_cte
+    (sql_cte_name
+     (sql_identifier))
+    (sql_statement
+    (sql_select_statement
+     (sql_select_clause
+      (sql_column_list
+       (sql_expr 
+        (sql_identifier))))))))
   (sql_select_clause
    (sql_column_list
     (sql_expr
@@ -230,6 +237,129 @@ order by venuename
       (sql_identifier)))
     (sql_order_by_clause
      (sql_order_by_expression
-      (sql_identifier)))))
+      (sql_identifier))))))
 
+===
+redshift select with recursive
+===
 
+with recursive john_org(id, name, manager_id, level) as
+( select id, name, manager_id, 1 as level
+  from employee
+  where name = 'John'
+  union all
+  select e.id, e.name, e.manager_id, level + 1
+  from employee e, john_org j
+  where e.manager_id = j.id and level < 4 
+  )
+ select id, name, manager_id from john_org order by manager_id
+
+---
+
+(source_file
+ (sql_statement
+  (sql_select_statement
+   (sql_with_clause
+    (sql_cte
+     (sql_cte_recursive_name
+      (sql_cte_name
+       (sql_identifier))
+      (sql_column_list
+       (sql_expr
+        (sql_identifier))
+       (sql_expr
+        (sql_identifier))
+       (sql_expr
+        (sql_identifier))
+       (sql_expr
+        (sql_identifier))))
+     (sql_statement
+      (sql_union_statement
+       (sql_statement
+        (sql_select_statement
+         (sql_select_clause
+          (sql_column_list
+           (sql_expr
+            (sql_identifier))
+           (sql_expr
+            (sql_identifier))
+           (sql_expr
+            (sql_identifier))
+           (sql_expr
+            (sql_alias
+             (sql_expr
+              (sql_identifier))
+             (sql_identifier)))))
+         (sql_from_clause
+          (sql_table_name
+           (sql_identifier)))
+         (sql_where_clause
+          (sql_expr
+           (sql_binary_expr
+            (sql_expr
+             (sql_identifier))
+            (sql_expr
+             (sql_string
+              (content))))))))
+    (sql_statement
+     (sql_select_statement
+      (sql_select_clause
+       (sql_column_list
+        (sql_expr
+         (sql_dotted_identifier
+          (sql_identifier)
+          (sql_identifier)))
+        (sql_expr
+         (sql_dotted_identifier
+          (sql_identifier)
+          (sql_identifier)))
+        (sql_expr
+         (sql_dotted_identifier
+          (sql_identifier)
+          (sql_identifier)))
+        (sql_expr
+         (sql_binary_expr
+          (sql_expr
+           (sql_identifier))
+          (sql_expr
+           (sql_identifier))))))
+      (sql_from_clause
+       (sql_table_name
+        (sql_identifier)
+        (sql_identifier))
+       (sql_table_name
+        (sql_identifier)
+        (sql_identifier)))
+      (sql_where_clause
+       (sql_expr
+        (sql_boolean_expr
+         (sql_expr
+          (sql_binary_expr
+           (sql_expr
+            (sql_dotted_identifier
+             (sql_identifier)
+             (sql_identifier)))
+           (sql_expr
+            (sql_dotted_identifier
+             (sql_identifier)
+             (sql_identifier)))))
+         (sql_expr
+          (sql_binary_expr
+           (sql_expr
+            (sql_identifier))
+           (sql_expr
+            (sql_identifier)))))))))))))
+    (sql_select_clause
+     (sql_column_list
+      (sql_expr
+       (sql_identifier))
+      (sql_expr
+       (sql_identifier))
+      (sql_expr
+       (sql_identifier))))
+    (sql_from_clause
+     (sql_table_name
+      (sql_identifier)))
+    (sql_order_by_clause
+     (sql_order_by_expression
+      (sql_identifier))))))

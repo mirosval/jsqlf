@@ -8,26 +8,27 @@ select * from {{ ref('table') }}
 ---
 
 (source_file
-  (jinja_block
-    (jinja_expr
-      (jinja_fn_call
-        (jinja_identifier)
-        (jinja_argument_list
-          (jinja_kwarg
-            (jinja_identifier)
-            (jinja_expr
-              (jinja_lit_string)))))))
+ (jinja_block
+  (jinja_expr
+   (jinja_fn_call
+    (jinja_identifier)
+    (jinja_argument_list
+     (jinja_kwarg
+      (jinja_identifier)
+      (jinja_expr
+       (jinja_lit_string)))))))
+ (sql_statement
   (sql_select_statement
-    (sql_select_clause
-      (sql_column_list))
-    (sql_from_clause
-      (jinja_block
+   (sql_select_clause
+    (sql_column_list))
+   (sql_from_clause
+    (jinja_block
+     (jinja_expr
+      (jinja_fn_call
+       (jinja_identifier)
+       (jinja_argument_list
         (jinja_expr
-          (jinja_fn_call
-            (jinja_identifier)
-            (jinja_argument_list
-              (jinja_expr
-                (jinja_lit_string)))))))))
+         (jinja_lit_string))))))))))
 
 ===
 min sql casing
@@ -38,11 +39,12 @@ SELECT * From table
 ---
 
 (source_file
+ (sql_statement
   (sql_select_statement
-    (sql_select_clause
-      (sql_column_list))
-    (sql_from_clause
-      (sql_table_name (sql_identifier)))))
+   (sql_select_clause
+    (sql_column_list))
+   (sql_from_clause
+    (sql_table_name (sql_identifier))))))
 
 ===
 sql min select multiple from tables
@@ -53,14 +55,15 @@ select * from t1, t2
 ---
 
 (source_file
+ (sql_statement
   (sql_select_statement
-    (sql_select_clause
-      (sql_column_list))
-    (sql_from_clause
-      (sql_table_name
-        (sql_identifier))
-      (sql_table_name
-        (sql_identifier)))))
+   (sql_select_clause
+    (sql_column_list))
+   (sql_from_clause
+    (sql_table_name
+     (sql_identifier))
+    (sql_table_name
+     (sql_identifier))))))
 
 ===
 sql min select table alias
@@ -71,13 +74,14 @@ select * from t1 as t
 ---
 
 (source_file
+ (sql_statement
   (sql_select_statement
-    (sql_select_clause
-      (sql_column_list))
-    (sql_from_clause
-      (sql_table_name
-        (sql_identifier)
-        (sql_identifier)))))
+   (sql_select_clause
+    (sql_column_list))
+   (sql_from_clause
+    (sql_table_name
+     (sql_identifier)
+     (sql_identifier))))))
 
 ===
 sql min select fn
@@ -88,18 +92,19 @@ select min(1) as c
 ---
 
 (source_file
+ (sql_statement
   (sql_select_statement
-    (sql_select_clause
-      (sql_column_list
-        (sql_expr
-          (sql_alias
-            (sql_expr
-              (sql_fn
-                (sql_identifier)
-                (sql_arg_list
-                  (sql_expr
-                    (sql_identifier)))))
-            (sql_identifier)))))))
+   (sql_select_clause
+    (sql_column_list
+     (sql_expr
+      (sql_alias
+       (sql_expr
+        (sql_fn
+         (sql_identifier)
+         (sql_arg_list
+          (sql_expr
+           (sql_identifier)))))
+       (sql_identifier))))))))
 
 ===
 sql min select where clause 
@@ -111,20 +116,21 @@ where a = 'a'
 ---
 
 (source_file
+ (sql_statement
   (sql_select_statement
-    (sql_select_clause
-      (sql_column_list))
-    (sql_from_clause
-      (sql_table_name
-        (sql_identifier)))
-    (sql_where_clause
+   (sql_select_clause
+    (sql_column_list))
+   (sql_from_clause
+    (sql_table_name
+     (sql_identifier)))
+   (sql_where_clause
+    (sql_expr
+     (sql_binary_expr
       (sql_expr
-        (sql_binary_expr
-          (sql_expr
-            (sql_identifier))
-          (sql_expr
-            (sql_string
-              (content))))))))
+       (sql_identifier))
+      (sql_expr
+       (sql_string
+        (content)))))))))
 
 ===
 sql min select where clause boolean 
@@ -136,25 +142,186 @@ where a = 'a' and b > 1
 ---
 
 (source_file
+ (sql_statement
   (sql_select_statement
-    (sql_select_clause
-      (sql_column_list))
-    (sql_from_clause
-      (sql_table_name
-        (sql_identifier)))
-    (sql_where_clause
+   (sql_select_clause
+    (sql_column_list))
+   (sql_from_clause
+    (sql_table_name
+     (sql_identifier)))
+   (sql_where_clause
+    (sql_expr
+     (sql_boolean_expr
       (sql_expr
-        (sql_boolean_expr
-          (sql_expr
-            (sql_binary_expr
-              (sql_expr
-                (sql_identifier))
-            (sql_expr
-              (sql_string
-                (content)))))
-          (sql_expr
-            (sql_binary_expr
-              (sql_expr
-                (sql_identifier))
-              (sql_expr
-                (sql_identifier)))))))))
+       (sql_binary_expr
+        (sql_expr
+         (sql_identifier))
+        (sql_expr
+         (sql_string
+          (content)))))
+      (sql_expr
+       (sql_binary_expr
+        (sql_expr
+         (sql_identifier))
+        (sql_expr
+         (sql_identifier))))))))))
+
+===
+sql min union
+===
+
+select 1
+union all
+select 1
+
+---
+
+(source_file
+ (sql_statement
+  (sql_union_statement
+   (sql_statement
+    (sql_select_statement
+     (sql_select_clause
+      (sql_column_list
+       (sql_expr
+        (sql_identifier))))))
+   (sql_statement
+    (sql_select_statement
+     (sql_select_clause
+      (sql_column_list
+       (sql_expr
+        (sql_identifier)))))))))
+
+===
+sql min intersect
+===
+
+select 1
+intersect all
+select 1
+
+---
+
+(source_file
+ (sql_statement
+  (sql_intersect_statement
+   (sql_statement
+    (sql_select_statement
+     (sql_select_clause
+      (sql_column_list
+       (sql_expr
+        (sql_identifier))))))
+   (sql_statement
+    (sql_select_statement
+     (sql_select_clause
+      (sql_column_list
+       (sql_expr
+        (sql_identifier)))))))))
+
+===
+sql min except
+===
+
+select 1
+except all
+select 1
+
+---
+
+(source_file
+ (sql_statement
+  (sql_except_statement
+   (sql_statement
+    (sql_select_statement
+     (sql_select_clause
+      (sql_column_list
+       (sql_expr
+        (sql_identifier))))))
+   (sql_statement
+    (sql_select_statement
+     (sql_select_clause
+      (sql_column_list
+       (sql_expr
+        (sql_identifier)))))))))
+
+===
+sql min union precedence
+===
+
+select 1
+union
+select 1
+union
+select 1
+
+---
+
+(source_file
+ (sql_statement
+  (sql_union_statement
+   (sql_statement
+    (sql_union_statement
+     (sql_statement
+      (sql_select_statement
+       (sql_select_clause
+        (sql_column_list
+         (sql_expr
+          (sql_identifier))))))
+     (sql_statement
+      (sql_select_statement
+       (sql_select_clause
+        (sql_column_list
+         (sql_expr
+          (sql_identifier))))))))
+   (sql_statement
+    (sql_select_statement
+     (sql_select_clause
+      (sql_column_list
+       (sql_expr
+        (sql_identifier)))))))))
+
+===
+sql min union except intersect precedence
+===
+
+select 1
+union
+select 1
+except
+select 1
+intersect
+select 1
+
+---
+
+(source_file
+ (sql_statement
+  (sql_except_statement
+   (sql_statement
+    (sql_union_statement
+     (sql_statement
+      (sql_select_statement
+       (sql_select_clause
+        (sql_column_list
+         (sql_expr
+          (sql_identifier))))))
+     (sql_statement
+      (sql_select_statement
+       (sql_select_clause
+        (sql_column_list
+         (sql_expr
+          (sql_identifier))))))))
+   (sql_statement
+    (sql_intersect_statement
+     (sql_statement
+      (sql_select_statement
+       (sql_select_clause
+        (sql_column_list
+         (sql_expr
+          (sql_identifier))))))
+     (sql_statement
+      (sql_select_statement
+       (sql_select_clause
+        (sql_column_list
+         (sql_expr
+          (sql_identifier)))))))))))

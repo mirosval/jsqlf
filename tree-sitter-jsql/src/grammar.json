@@ -13,13 +13,13 @@
             },
             {
               "type": "SYMBOL",
-              "name": "sql_select_statement"
+              "name": "sql_statement"
             }
           ]
         },
         {
           "type": "SYMBOL",
-          "name": "sql_select_statement"
+          "name": "sql_statement"
         }
       ]
     },
@@ -387,6 +387,198 @@
         "value": "[a-zA-Z_][a-zA-Z0-9_]*"
       }
     },
+    "sql_statement": {
+      "type": "CHOICE",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "sql_select_statement"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "sql_union_statement"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "sql_intersect_statement"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "sql_except_statement"
+        }
+      ]
+    },
+    "sql_union_statement": {
+      "type": "PREC_LEFT",
+      "value": 1,
+      "content": {
+        "type": "SEQ",
+        "members": [
+          {
+            "type": "SYMBOL",
+            "name": "sql_statement"
+          },
+          {
+            "type": "ALIAS",
+            "content": {
+              "type": "TOKEN",
+              "content": {
+                "type": "PREC",
+                "value": 1,
+                "content": {
+                  "type": "PATTERN",
+                  "value": "[uU][nN][iI][oO][nN]"
+                }
+              }
+            },
+            "named": false,
+            "value": "union"
+          },
+          {
+            "type": "CHOICE",
+            "members": [
+              {
+                "type": "ALIAS",
+                "content": {
+                  "type": "TOKEN",
+                  "content": {
+                    "type": "PREC",
+                    "value": 1,
+                    "content": {
+                      "type": "PATTERN",
+                      "value": "[aA][lL][lL]"
+                    }
+                  }
+                },
+                "named": false,
+                "value": "all"
+              },
+              {
+                "type": "BLANK"
+              }
+            ]
+          },
+          {
+            "type": "SYMBOL",
+            "name": "sql_statement"
+          }
+        ]
+      }
+    },
+    "sql_intersect_statement": {
+      "type": "PREC_LEFT",
+      "value": 2,
+      "content": {
+        "type": "SEQ",
+        "members": [
+          {
+            "type": "SYMBOL",
+            "name": "sql_statement"
+          },
+          {
+            "type": "ALIAS",
+            "content": {
+              "type": "TOKEN",
+              "content": {
+                "type": "PREC",
+                "value": 1,
+                "content": {
+                  "type": "PATTERN",
+                  "value": "[iI][nN][tT][eE][rR][sS][eE][cC][tT]"
+                }
+              }
+            },
+            "named": false,
+            "value": "intersect"
+          },
+          {
+            "type": "CHOICE",
+            "members": [
+              {
+                "type": "ALIAS",
+                "content": {
+                  "type": "TOKEN",
+                  "content": {
+                    "type": "PREC",
+                    "value": 1,
+                    "content": {
+                      "type": "PATTERN",
+                      "value": "[aA][lL][lL]"
+                    }
+                  }
+                },
+                "named": false,
+                "value": "all"
+              },
+              {
+                "type": "BLANK"
+              }
+            ]
+          },
+          {
+            "type": "SYMBOL",
+            "name": "sql_statement"
+          }
+        ]
+      }
+    },
+    "sql_except_statement": {
+      "type": "PREC_LEFT",
+      "value": 1,
+      "content": {
+        "type": "SEQ",
+        "members": [
+          {
+            "type": "SYMBOL",
+            "name": "sql_statement"
+          },
+          {
+            "type": "ALIAS",
+            "content": {
+              "type": "TOKEN",
+              "content": {
+                "type": "PREC",
+                "value": 1,
+                "content": {
+                  "type": "PATTERN",
+                  "value": "[eE][xX][cC][eE][pP][tT]"
+                }
+              }
+            },
+            "named": false,
+            "value": "except"
+          },
+          {
+            "type": "CHOICE",
+            "members": [
+              {
+                "type": "ALIAS",
+                "content": {
+                  "type": "TOKEN",
+                  "content": {
+                    "type": "PREC",
+                    "value": 1,
+                    "content": {
+                      "type": "PATTERN",
+                      "value": "[aA][lL][lL]"
+                    }
+                  }
+                },
+                "named": false,
+                "value": "all"
+              },
+              {
+                "type": "BLANK"
+              }
+            ]
+          },
+          {
+            "type": "SYMBOL",
+            "name": "sql_statement"
+          }
+        ]
+      }
+    },
     "sql_select_statement": {
       "type": "SEQ",
       "members": [
@@ -513,8 +705,17 @@
       "type": "SEQ",
       "members": [
         {
-          "type": "SYMBOL",
-          "name": "sql_cte_name"
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "sql_cte_name"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "sql_cte_recursive_name"
+            }
+          ]
         },
         {
           "type": "ALIAS",
@@ -538,7 +739,44 @@
         },
         {
           "type": "SYMBOL",
-          "name": "sql_select_statement"
+          "name": "sql_statement"
+        },
+        {
+          "type": "STRING",
+          "value": ")"
+        }
+      ]
+    },
+    "sql_cte_recursive_name": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "ALIAS",
+          "content": {
+            "type": "TOKEN",
+            "content": {
+              "type": "PREC",
+              "value": 1,
+              "content": {
+                "type": "PATTERN",
+                "value": "[rR][eE][cC][uU][rR][sS][iI][vV][eE]"
+              }
+            }
+          },
+          "named": false,
+          "value": "recursive"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "sql_cte_name"
+        },
+        {
+          "type": "STRING",
+          "value": "("
+        },
+        {
+          "type": "SYMBOL",
+          "name": "sql_column_list"
         },
         {
           "type": "STRING",
