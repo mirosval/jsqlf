@@ -435,6 +435,18 @@
           "members": [
             {
               "type": "SYMBOL",
+              "name": "sql_group_by_clause"
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SYMBOL",
               "name": "sql_order_by_clause"
             },
             {
@@ -755,6 +767,72 @@
         }
       ]
     },
+    "sql_group_by_clause": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "ALIAS",
+          "content": {
+            "type": "TOKEN",
+            "content": {
+              "type": "PREC",
+              "value": 1,
+              "content": {
+                "type": "PATTERN",
+                "value": "[gG][rR][oO][uU][pP]"
+              }
+            }
+          },
+          "named": false,
+          "value": "group"
+        },
+        {
+          "type": "ALIAS",
+          "content": {
+            "type": "TOKEN",
+            "content": {
+              "type": "PREC",
+              "value": 1,
+              "content": {
+                "type": "PATTERN",
+                "value": "[bB][yY]"
+              }
+            }
+          },
+          "named": false,
+          "value": "by"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "sql_group_by_expression"
+        }
+      ]
+    },
+    "sql_group_by_expression": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "sql_identifier"
+        },
+        {
+          "type": "REPEAT",
+          "content": {
+            "type": "SEQ",
+            "members": [
+              {
+                "type": "STRING",
+                "value": ","
+              },
+              {
+                "type": "SYMBOL",
+                "name": "sql_identifier"
+              }
+            ]
+          }
+        }
+      ]
+    },
     "sql_limit_clause": {
       "type": "SEQ",
       "members": [
@@ -786,6 +864,10 @@
         {
           "type": "SYMBOL",
           "name": "sql_identifier"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "sql_dotted_identifier"
         },
         {
           "type": "SYMBOL",
@@ -1270,6 +1352,44 @@
                       "type": "BLANK"
                     }
                   ]
+                },
+                {
+                  "type": "SYMBOL",
+                  "name": "sql_identifier"
+                }
+              ]
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
+        }
+      ]
+    },
+    "sql_dotted_identifier": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "sql_identifier"
+        },
+        {
+          "type": "STRING",
+          "value": "."
+        },
+        {
+          "type": "SYMBOL",
+          "name": "sql_identifier"
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SEQ",
+              "members": [
+                {
+                  "type": "STRING",
+                  "value": "."
                 },
                 {
                   "type": "SYMBOL",

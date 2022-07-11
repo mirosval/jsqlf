@@ -9,21 +9,227 @@ select * from venuecopy order by 1 limit 10
 
 (source_file
   (sql_select_statement
-    (sql_cte
+    (sql_with_clause
+        (sql_cte
+        (sql_cte_name
+            (sql_identifier))
+        (sql_select_statement
+          (sql_select_clause
+            (sql_column_list))
+          (sql_from_clause
+            (sql_table_name
+                (sql_identifier))))))
+    (sql_select_clause
+      (sql_column_list))
+    (sql_from_clause
+      (sql_table_name
+        (sql_identifier)))
+    (sql_order_by_clause
+      (sql_order_by_expression
+        (sql_identifier)))
+    (sql_limit_clause
+      (sql_integer))))
+
+===
+redshift select with 2 ctes cte1
+===
+
+select venuename, venuecity, sum(pricepaid) as venuename_sales
+from sales, venue, event
+where venue.venueid=event.venueid and event.eventid=sales.eventid
+group by venuename, venuecity
+
+---
+
+(source_file
+ (sql_select_statement
+  (sql_select_clause
+   (sql_column_list
+    (sql_expr 
+     (sql_identifier))
+    (sql_expr 
+     (sql_identifier))
+    (sql_expr 
+     (sql_alias
+      (sql_expr
+       (sql_fn
+        (sql_identifier)
+        (sql_arg_list
+         (sql_expr
+          (sql_identifier)))))
+      (sql_identifier)))))
+  (sql_from_clause
+   (sql_table_name
+    (sql_identifier))
+   (sql_table_name
+    (sql_identifier))
+   (sql_table_name
+    (sql_identifier)))
+  (sql_where_clause
+   (sql_expr
+    (sql_boolean_expr
+     (sql_expr
+      (sql_binary_expr
+       (sql_expr
+        (sql_dotted_identifier
+         (sql_identifier)
+         (sql_identifier)))
+       (sql_expr
+        (sql_dotted_identifier
+         (sql_identifier)
+         (sql_identifier)))))
+     (sql_expr
+      (sql_binary_expr
+       (sql_expr 
+        (sql_dotted_identifier 
+         (sql_identifier) 
+         (sql_identifier)))
+       (sql_expr 
+        (sql_dotted_identifier 
+         (sql_identifier) 
+         (sql_identifier))))))))
+    (sql_group_by_clause
+     (sql_group_by_expression
       (sql_identifier)
-      (sql_select
-        (sql_column_list)
-        (sql_from_clause
-          (sql_table_name
-            (sql_identifier)))))
-    (sql_select
-      (sql_column_list)
-      (sql_from_clause
-        (sql_table_name
-          (sql_identifier)))
-      (sql_order_by_clause
-        (sql_order_by_expression
-          (sql_identifier)))
-      (sql_limit_clause
-        (sql_integer)))))
+      (sql_identifier)))))
+
+===
+redshift select with 2 ctes cte2
+===
+
+select venuename
+from venue_sales
+where venuename_sales > 800000
+
+---
+
+(source_file
+ (sql_select_statement
+  (sql_select_clause
+   (sql_column_list
+    (sql_expr
+     (sql_identifier))))
+  (sql_from_clause
+   (sql_table_name
+    (sql_identifier)))
+  (sql_where_clause
+   (sql_expr
+    (sql_binary_expr
+     (sql_expr
+      (sql_identifier))
+     (sql_expr
+      (sql_identifier)))))))
+
+===
+redshift select with 2 ctes
+===
+
+with venue_sales as (select 1),
+top_venues as (select 2)
+select venuename, venuecity, venuestate, sum(qtysold) as venue_qty, sum(pricepaid) as venue_sales
+from sales, venue, event
+where venue.venueid=event.venueid and event.eventid=sales.eventid
+and venuename in (select venuename from top_venues)
+group by venuename, venuecity, venuestate
+order by venuename
+
+---
+
+(source_file
+ (sql_select_statement
+  (sql_with_clause
+   (sql_cte
+    (sql_cte_name
+     (sql_identifier))
+    (sql_select_statement
+     (sql_select_clause
+      (sql_column_list
+       (sql_expr 
+        (sql_identifier))))))
+   (sql_cte
+    (sql_cte_name
+     (sql_identifier))
+    (sql_select_statement
+     (sql_select_clause
+      (sql_column_list
+       (sql_expr 
+        (sql_identifier)))))))
+  (sql_select_clause
+   (sql_column_list
+    (sql_expr
+     (sql_identifier))
+    (sql_expr
+     (sql_identifier))
+    (sql_expr
+     (sql_identifier))
+    (sql_expr
+     (sql_alias
+      (sql_expr
+       (sql_fn
+        (sql_identifier)
+        (sql_arg_list
+         (sql_expr
+          (sql_identifier)))))
+      (sql_identifier)))
+    (sql_expr
+     (sql_alias
+      (sql_expr
+       (sql_fn
+        (sql_identifier)
+        (sql_arg_list
+         (sql_expr
+          (sql_identifier)))))
+      (sql_identifier)))))
+    (sql_from_clause
+     (sql_table_name
+      (sql_identifier))
+     (sql_table_name
+      (sql_identifier))
+     (sql_table_name
+      (sql_identifier)))
+    (sql_where_clause
+     (sql_expr
+      (sql_boolean_expr
+       (sql_expr
+        (sql_boolean_expr
+         (sql_expr
+          (sql_binary_expr
+           (sql_expr
+            (sql_dotted_identifier
+             (sql_identifier)
+             (sql_identifier)))
+           (sql_expr
+            (sql_dotted_identifier
+             (sql_identifier)
+             (sql_identifier)))))
+         (sql_expr
+          (sql_binary_expr
+           (sql_expr
+            (sql_dotted_identifier
+             (sql_identifier)
+             (sql_identifier)))
+           (sql_expr
+            (sql_dotted_identifier
+             (sql_identifier)
+             (sql_identifier)))))))
+    (sql_expr
+     (sql_fn
+      (sql_identifier)
+      (ERROR
+       (jinja_identifier))
+      (sql_arg_list
+       (sql_expr
+        (sql_identifier)))
+      (ERROR
+       (jinja_identifier)
+       (jinja_identifier)))))))
+    (sql_group_by_clause
+     (sql_group_by_expression
+      (sql_identifier)
+      (sql_identifier)
+      (sql_identifier)))
+    (sql_order_by_clause
+     (sql_order_by_expression
+      (sql_identifier)))))
+
 

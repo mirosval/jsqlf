@@ -154,6 +154,7 @@ module.exports = grammar({
       $.sql_select_clause,
       optional($.sql_from_clause),
       optional($.sql_where_clause),
+      optional($.sql_group_by_clause),
       optional($.sql_order_by_clause),
       optional($.sql_limit_clause),
     ),
@@ -239,6 +240,19 @@ module.exports = grammar({
       )
     ),
 
+    sql_group_by_clause: $ => seq(
+      sql_kw('group'),
+      sql_kw('by'),
+      $.sql_group_by_expression,
+    ),
+
+    sql_group_by_expression: $ => seq(
+      $.sql_identifier,
+      repeat(
+        seq(',', $.sql_identifier)
+      )
+    ),
+
     sql_limit_clause: $ => seq(
       sql_kw('limit'),
       $.sql_integer,
@@ -246,6 +260,7 @@ module.exports = grammar({
 
     sql_expr: $ => choice(
       $.sql_identifier,
+      $.sql_dotted_identifier,
       $.sql_alias,
       $.sql_fn,
       $.sql_string,
@@ -324,6 +339,13 @@ module.exports = grammar({
     ),
 
     sql_identifier: $ => /[a-zA-Z0-9_]+/,
+
+    sql_dotted_identifier: $ => seq(
+      $.sql_identifier,
+      '.',
+      $.sql_identifier,
+      optional(seq('.',$.sql_identifier))
+    ),
 
     sql_integer: $ => /[0-9]+/,
 
