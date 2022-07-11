@@ -236,7 +236,7 @@
     }
   },
   {
-    "type": "sql_binary_expression",
+    "type": "sql_binary_expr",
     "named": true,
     "fields": {
       "left": {
@@ -356,6 +356,21 @@
     }
   },
   {
+    "type": "sql_boolean_expr",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "sql_expr",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "sql_column_list",
     "named": true,
     "fields": {},
@@ -417,7 +432,11 @@
           "named": true
         },
         {
-          "type": "sql_binary_expression",
+          "type": "sql_binary_expr",
+          "named": true
+        },
+        {
+          "type": "sql_boolean_expr",
           "named": true
         },
         {
@@ -746,6 +765,10 @@
     "named": false
   },
   {
+    "type": "and",
+    "named": false
+  },
+  {
     "type": "as",
     "named": false
   },
@@ -771,6 +794,14 @@
   },
   {
     "type": "limit",
+    "named": false
+  },
+  {
+    "type": "not",
+    "named": false
+  },
+  {
+    "type": "or",
     "named": false
   },
   {

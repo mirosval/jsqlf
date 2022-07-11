@@ -249,7 +249,8 @@ module.exports = grammar({
       $.sql_alias,
       $.sql_fn,
       $.sql_string,
-      $.sql_binary_expression,
+      $.sql_binary_expr,
+      $.sql_boolean_expr,
     ),
 
     sql_string: $ => //choice(
@@ -261,7 +262,7 @@ module.exports = grammar({
     //   ),
     // ),
 
-    sql_binary_expression: $ => {
+    sql_binary_expr: $ => {
       const table = [
         [PREC.exp, "^"],
         [PREC.multiplicative, choice(...multiplicative_operators)],
@@ -282,6 +283,12 @@ module.exports = grammar({
         ),
       );
     },
+
+    sql_boolean_expr: $ => choice(
+      prec.left(PREC.unary, seq(sql_kw('not'), $.sql_expr)),
+      prec.left(PREC.and, seq($.sql_expr, sql_kw('and'), $.sql_expr)),
+      prec.left(PREC.or, seq($.sql_expr, sql_kw('or'), $.sql_expr)),
+    ),
 
     sql_alias: $ => seq(
       $.sql_expr,
