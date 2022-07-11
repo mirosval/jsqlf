@@ -64,21 +64,36 @@ module.exports = grammar({
 
   rules: {
     // TODO: add the actual grammar rules
-    source_file: $ => choice(
-      seq(
-        $.jinja_block,
-        $.sql_statement,
+    source_file: $ => seq(
+      repeat(
+        choice(
+          $.jinja_expression,
+          $.jinja_statement,
+          $.jinja_comment,
+        )
       ),
       $.sql_statement,
     ),
 
-    jinja_block: $ => seq(
+    jinja_expression: $ => seq(
       '{{',
-      $.jinja_expr,
+      $._jinja_expr,
       '}}'
     ),
 
-    jinja_expr: $ => choice(
+    jinja_statement: $ => seq(
+      '{%',
+      $._jinja_expr,
+      '%}'
+    ),
+
+    jinja_comment: $ => seq(
+      '{#',
+      $._jinja_expr,
+      '#}'
+    ),
+
+    _jinja_expr: $ => choice(
         $.jinja_fn_call,
         $.jinja_list,
         $.jinja_dict,
@@ -95,7 +110,7 @@ module.exports = grammar({
         '(',
         optional(commaSep1(
             choice(
-                $.jinja_expr,
+                $._jinja_expr,
                 $.jinja_kwarg
             )
         )),
@@ -123,7 +138,7 @@ module.exports = grammar({
 
     jinja_list: $ => seq(
         '[',
-        optional(commaSep1($.jinja_expr)),
+        optional(commaSep1($._jinja_expr)),
         optional(','),
         ']'
     ),
@@ -138,13 +153,13 @@ module.exports = grammar({
     jinja_pair: $ => seq(
         field('key', $.jinja_lit_string),
         ':',
-        field('value', $.jinja_expr)
+        field('value', $._jinja_expr)
     ),
 
     jinja_kwarg: $ => seq(
         field("key", $.jinja_identifier),
         '=',
-        field("value", $.jinja_expr),
+        field("value", $._jinja_expr),
     ),
 
     // This regex is fine until we allow user-named variables and functions. 
@@ -249,11 +264,11 @@ module.exports = grammar({
     sql_column_list: $ => choice(
       '*',
       seq(
-        $.sql_expr,
+        $._sql_expr,
         repeat(
           seq(
             ',',
-            $.sql_expr,
+            $._sql_expr,
           )
         )
       )
@@ -262,14 +277,14 @@ module.exports = grammar({
     sql_from_clause: $ => seq(
       sql_kw('from'),
       choice(
-        $.jinja_block,
+        $.jinja_expression,
         $.sql_table_name,
       ),
       repeat(
         seq(
           ',',
           choice(
-            $.jinja_block,
+            $.jinja_expression,
             $.sql_table_name,
           ),
         )
@@ -278,7 +293,7 @@ module.exports = grammar({
 
     sql_where_clause: $ => seq(
       sql_kw('where'),
-      $.sql_expr,
+      $._sql_expr,
     ),
 
     sql_order_by_clause: $ => seq(
@@ -312,7 +327,7 @@ module.exports = grammar({
       $.sql_integer,
     ),
 
-    sql_expr: $ => choice(
+    _sql_expr: $ => choice(
       $.sql_identifier,
       $.sql_dotted_identifier,
       $.sql_alias,
@@ -344,9 +359,9 @@ module.exports = grammar({
           prec.left(
             precedence,
             seq(
-              field("left", $.sql_expr),
+              field("left", $._sql_expr),
               field("operator", operator),
-              field("right", $.sql_expr),
+              field("right", $._sql_expr),
             ),
           ),
         ),
@@ -354,13 +369,13 @@ module.exports = grammar({
     },
 
     sql_boolean_expr: $ => choice(
-      prec.left(PREC.unary, seq(sql_kw('not'), $.sql_expr)),
-      prec.left(PREC.and, seq($.sql_expr, sql_kw('and'), $.sql_expr)),
-      prec.left(PREC.or, seq($.sql_expr, sql_kw('or'), $.sql_expr)),
+      prec.left(PREC.unary, seq(sql_kw('not'), $._sql_expr)),
+      prec.left(PREC.and, seq($._sql_expr, sql_kw('and'), $._sql_expr)),
+      prec.left(PREC.or, seq($._sql_expr, sql_kw('or'), $._sql_expr)),
     ),
 
     sql_alias: $ => seq(
-      $.sql_expr,
+      $._sql_expr,
       sql_kw('as'),
       $.sql_identifier
     ),
@@ -373,11 +388,11 @@ module.exports = grammar({
     ),
 
     sql_arg_list: $ => seq(
-      $.sql_expr,
+      $._sql_expr,
       repeat(
         seq(
           ',',
-          $.sql_expr
+          $._sql_expr
         )
       )
     ),

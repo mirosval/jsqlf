@@ -8,27 +8,23 @@ select * from {{ ref('table') }}
 ---
 
 (source_file
- (jinja_block
-  (jinja_expr
+ (jinja_expression
    (jinja_fn_call
     (jinja_identifier)
     (jinja_argument_list
      (jinja_kwarg
       (jinja_identifier)
-      (jinja_expr
-       (jinja_lit_string)))))))
+       (jinja_lit_string)))))
  (sql_statement
   (sql_select_statement
    (sql_select_clause
     (sql_column_list))
    (sql_from_clause
-    (jinja_block
-     (jinja_expr
+     (jinja_expression
       (jinja_fn_call
        (jinja_identifier)
        (jinja_argument_list
-        (jinja_expr
-         (jinja_lit_string))))))))))
+         (jinja_lit_string))))))))
 
 ===
 min sql casing
@@ -96,15 +92,12 @@ select min(1) as c
   (sql_select_statement
    (sql_select_clause
     (sql_column_list
-     (sql_expr
       (sql_alias
-       (sql_expr
         (sql_fn
          (sql_identifier)
          (sql_arg_list
-          (sql_expr
-           (sql_identifier)))))
-       (sql_identifier))))))))
+           (sql_identifier)))
+       (sql_identifier)))))))
 
 ===
 sql min select where clause 
@@ -124,13 +117,10 @@ where a = 'a'
     (sql_table_name
      (sql_identifier)))
    (sql_where_clause
-    (sql_expr
      (sql_binary_expr
-      (sql_expr
-       (sql_identifier))
-      (sql_expr
+       (sql_identifier)
        (sql_string
-        (content)))))))))
+        (content)))))))
 
 ===
 sql min select where clause boolean 
@@ -150,21 +140,14 @@ where a = 'a' and b > 1
     (sql_table_name
      (sql_identifier)))
    (sql_where_clause
-    (sql_expr
      (sql_boolean_expr
-      (sql_expr
        (sql_binary_expr
-        (sql_expr
-         (sql_identifier))
-        (sql_expr
+         (sql_identifier)
          (sql_string
-          (content)))))
-      (sql_expr
+          (content)))
        (sql_binary_expr
-        (sql_expr
-         (sql_identifier))
-        (sql_expr
-         (sql_identifier))))))))))
+         (sql_identifier)
+         (sql_identifier)))))))
 
 ===
 sql min union
@@ -183,14 +166,12 @@ select 1
     (sql_select_statement
      (sql_select_clause
       (sql_column_list
-       (sql_expr
-        (sql_identifier))))))
+        (sql_identifier)))))
    (sql_statement
     (sql_select_statement
      (sql_select_clause
       (sql_column_list
-       (sql_expr
-        (sql_identifier)))))))))
+        (sql_identifier))))))))
 
 ===
 sql min intersect
@@ -209,14 +190,12 @@ select 1
     (sql_select_statement
      (sql_select_clause
       (sql_column_list
-       (sql_expr
-        (sql_identifier))))))
+        (sql_identifier)))))
    (sql_statement
     (sql_select_statement
      (sql_select_clause
       (sql_column_list
-       (sql_expr
-        (sql_identifier)))))))))
+        (sql_identifier))))))))
 
 ===
 sql min except
@@ -235,14 +214,12 @@ select 1
     (sql_select_statement
      (sql_select_clause
       (sql_column_list
-       (sql_expr
-        (sql_identifier))))))
+        (sql_identifier)))))
    (sql_statement
     (sql_select_statement
      (sql_select_clause
       (sql_column_list
-       (sql_expr
-        (sql_identifier)))))))))
+        (sql_identifier))))))))
 
 ===
 sql min union precedence
@@ -265,20 +242,17 @@ select 1
       (sql_select_statement
        (sql_select_clause
         (sql_column_list
-         (sql_expr
-          (sql_identifier))))))
+          (sql_identifier)))))
      (sql_statement
       (sql_select_statement
        (sql_select_clause
         (sql_column_list
-         (sql_expr
-          (sql_identifier))))))))
+          (sql_identifier)))))))
    (sql_statement
     (sql_select_statement
      (sql_select_clause
       (sql_column_list
-       (sql_expr
-        (sql_identifier)))))))))
+        (sql_identifier))))))))
 
 ===
 sql min union except intersect precedence
@@ -303,25 +277,21 @@ select 1
       (sql_select_statement
        (sql_select_clause
         (sql_column_list
-         (sql_expr
-          (sql_identifier))))))
+          (sql_identifier)))))
      (sql_statement
       (sql_select_statement
        (sql_select_clause
         (sql_column_list
-         (sql_expr
-          (sql_identifier))))))))
+          (sql_identifier)))))))
    (sql_statement
     (sql_intersect_statement
      (sql_statement
       (sql_select_statement
        (sql_select_clause
         (sql_column_list
-         (sql_expr
-          (sql_identifier))))))
+          (sql_identifier)))))
      (sql_statement
       (sql_select_statement
        (sql_select_clause
         (sql_column_list
-         (sql_expr
-          (sql_identifier)))))))))))
+          (sql_identifier))))))))))
