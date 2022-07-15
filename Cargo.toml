@@ -7,6 +7,7 @@ edition = "2021"
 
 [dependencies]
 tree-sitter = "0.20.8"
+tree-sitter-jsql = { path = "tree-sitter-jsql"}
 
-[build-dependencies]
-cc = "1.0.73"
+[dev-dependencies]
+indoc = "1.0"
