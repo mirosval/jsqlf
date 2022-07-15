@@ -276,6 +276,10 @@ module.exports = grammar({
 
     sql_from_clause: $ => seq(
       sql_kw('from'),
+      $.sql_table_list,
+    ),
+
+    sql_table_list: $ => seq(
       choice(
         $.jinja_expression,
         $.sql_table_name,

@@ -779,15 +779,11 @@
     "named": true,
     "fields": {},
     "children": {
-      "multiple": true,
+      "multiple": false,
       "required": true,
       "types": [
         {
-          "type": "jinja_expression",
-          "named": true
-        },
-        {
-          "type": "sql_table_name",
+          "type": "sql_table_list",
           "named": true
         }
       ]
@@ -1025,6 +1021,25 @@
           }
         ]
       }
+    }
+  },
+  {
+    "type": "sql_table_list",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "jinja_expression",
+          "named": true
+        },
+        {
+          "type": "sql_table_name",
+          "named": true
+        }
+      ]
     }
   },
   {

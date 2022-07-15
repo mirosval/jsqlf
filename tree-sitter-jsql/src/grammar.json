@@ -916,6 +916,15 @@
           "value": "from"
         },
         {
+          "type": "SYMBOL",
+          "name": "sql_table_list"
+        }
+      ]
+    },
+    "sql_table_list": {
+      "type": "SEQ",
+      "members": [
+        {
           "type": "CHOICE",
           "members": [
             {

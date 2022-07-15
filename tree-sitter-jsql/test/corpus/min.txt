@@ -20,11 +20,12 @@ select * from {{ ref('table') }}
    (sql_select_clause
     (sql_column_list))
    (sql_from_clause
+     (sql_table_list
      (jinja_expression
       (jinja_fn_call
        (jinja_identifier)
        (jinja_argument_list
-         (jinja_lit_string))))))))
+         (jinja_lit_string)))))))))
 
 ===
 min sql casing
@@ -40,7 +41,9 @@ SELECT * From table
    (sql_select_clause
     (sql_column_list))
    (sql_from_clause
-    (sql_table_name (sql_identifier))))))
+    (sql_table_list 
+    (sql_table_name 
+      (sql_identifier)))))))
 
 ===
 sql min select multiple from tables
@@ -56,10 +59,11 @@ select * from t1, t2
    (sql_select_clause
     (sql_column_list))
    (sql_from_clause
+    (sql_table_list
     (sql_table_name
      (sql_identifier))
     (sql_table_name
-     (sql_identifier))))))
+     (sql_identifier)))))))
 
 ===
 sql min select table alias
@@ -75,9 +79,10 @@ select * from t1 as t
    (sql_select_clause
     (sql_column_list))
    (sql_from_clause
+    (sql_table_list
     (sql_table_name
      (sql_identifier)
-     (sql_identifier))))))
+     (sql_identifier)))))))
 
 ===
 sql min select fn
@@ -114,8 +119,9 @@ where a = 'a'
    (sql_select_clause
     (sql_column_list))
    (sql_from_clause
+   (sql_table_list
     (sql_table_name
-     (sql_identifier)))
+     (sql_identifier))))
    (sql_where_clause
      (sql_binary_expr
        (sql_identifier)
@@ -137,8 +143,9 @@ where a = 'a' and b > 1
    (sql_select_clause
     (sql_column_list))
    (sql_from_clause
+   (sql_table_list
     (sql_table_name
-     (sql_identifier)))
+     (sql_identifier))))
    (sql_where_clause
      (sql_boolean_expr
        (sql_binary_expr
