@@ -16,9 +16,19 @@ impl Jsql {
             n if n.kind() == "sql_statement" => Jsql::Container(Container::new(&n, &source)),
             n if n.kind() == "sql_select_statement" => Jsql::Container(Container::new(&n, &source)),
             n if n.kind() == "sql_select_clause" => Jsql::Container(Container::new(&n, &source)),
+            n if n.kind() == "sql_group_by_clause" => Jsql::Container(Container::new(&n, &source)),
+            n if n.kind() == "sql_order_by_clause" => Jsql::Container(Container::new(&n, &source)),
+            n if n.kind() == "sql_limit_clause" => Jsql::Container(Container::new(&n, &source)),
             n if n.kind() == "sql_from_clause" => Jsql::Container(Container::new(&n, &source)),
             n if n.kind() == "sql_column_list" => Jsql::CommaSep(CommaSep::new(&n, &source)),
             n if n.kind() == "sql_table_list" => Jsql::CommaSep(CommaSep::new(&n, &source)),
+            n if n.kind() == "sql_group_by_expression" => {
+                Jsql::CommaSep(CommaSep::new(&n, &source))
+            }
+            n if n.kind() == "sql_order_by_expression" => {
+                Jsql::CommaSep(CommaSep::new(&n, &source))
+            }
+            n if n.kind() == "sql_limit_expression" => Jsql::CommaSep(CommaSep::new(&n, &source)),
             n => {
                 dbg!(node.kind());
                 Jsql::Plain(Plain::new(n, &source))
