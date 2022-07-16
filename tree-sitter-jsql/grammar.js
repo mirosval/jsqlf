@@ -342,6 +342,13 @@ module.exports = grammar({
       $.sql_binary_expr,
       $.sql_boolean_expr,
       $.sql_in_expr,
+      $._sql_parens,
+    ),
+
+    _sql_parens: $ => seq(
+      '(',
+      $._sql_expr,
+      ')',
     ),
 
     sql_string: $ => //choice(

@@ -157,6 +157,38 @@ where a = 'a' and b > 1
          (sql_identifier)))))))
 
 ===
+sql min select where parens 
+===
+
+select * from a
+where (a = 'a' and b > 1) or c = 2
+
+---
+
+(source_file
+ (sql_statement
+  (sql_select_statement
+   (sql_select_clause
+    (sql_column_list))
+   (sql_from_clause
+    (sql_table_list
+     (sql_table_name
+      (sql_identifier))))
+   (sql_where_clause
+    (sql_boolean_expr
+     (sql_boolean_expr
+      (sql_binary_expr
+       (sql_identifier)
+       (sql_string
+        (content)))
+      (sql_binary_expr
+       (sql_identifier)
+       (sql_identifier)))
+     (sql_binary_expr
+      (sql_identifier)
+      (sql_identifier)))))))
+
+===
 sql min union
 ===
 
