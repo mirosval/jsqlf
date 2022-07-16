@@ -1001,28 +1001,12 @@
               "value": 1,
               "content": {
                 "type": "PATTERN",
-                "value": "[oO][rR][dD][eE][rR]"
+                "value": "[oO][rR][dD][eE][rR][  ][bB][yY]"
               }
             }
           },
           "named": false,
-          "value": "order"
-        },
-        {
-          "type": "ALIAS",
-          "content": {
-            "type": "TOKEN",
-            "content": {
-              "type": "PREC",
-              "value": 1,
-              "content": {
-                "type": "PATTERN",
-                "value": "[bB][yY]"
-              }
-            }
-          },
-          "named": false,
-          "value": "by"
+          "value": "order by"
         },
         {
           "type": "SYMBOL",
@@ -1067,28 +1051,12 @@
               "value": 1,
               "content": {
                 "type": "PATTERN",
-                "value": "[gG][rR][oO][uU][pP]"
+                "value": "[gG][rR][oO][uU][pP][  ][bB][yY]"
               }
             }
           },
           "named": false,
-          "value": "group"
-        },
-        {
-          "type": "ALIAS",
-          "content": {
-            "type": "TOKEN",
-            "content": {
-              "type": "PREC",
-              "value": 1,
-              "content": {
-                "type": "PATTERN",
-                "value": "[bB][yY]"
-              }
-            }
-          },
-          "named": false,
-          "value": "by"
+          "value": "group by"
         },
         {
           "type": "SYMBOL",
@@ -1140,6 +1108,15 @@
           "named": false,
           "value": "limit"
         },
+        {
+          "type": "SYMBOL",
+          "name": "sql_limit_expression"
+        }
+      ]
+    },
+    "sql_limit_expression": {
+      "type": "CHOICE",
+      "members": [
         {
           "type": "SYMBOL",
           "name": "sql_integer"

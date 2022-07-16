@@ -20,19 +20,20 @@ select * from venuecopy order by 1 limit 10
         (sql_column_list))
        (sql_from_clause
         (sql_table_list
-        (sql_table_name
-         (sql_identifier))))))))
+         (sql_table_name
+          (sql_identifier))))))))
    (sql_select_clause
     (sql_column_list))
    (sql_from_clause
     (sql_table_list
-    (sql_table_name
-     (sql_identifier))))
+     (sql_table_name
+      (sql_identifier))))
    (sql_order_by_clause
     (sql_order_by_expression
      (sql_identifier)))
    (sql_limit_clause
-    (sql_integer)))))
+    (sql_limit_expression
+     (sql_integer))))))
 
 ===
 redshift select with 2 ctes cte1
@@ -60,12 +61,12 @@ group by venuename, venuecity
       (sql_identifier))))
    (sql_from_clause
     (sql_table_list
-    (sql_table_name
-     (sql_identifier))
-    (sql_table_name
-     (sql_identifier))
-    (sql_table_name
-     (sql_identifier))))
+     (sql_table_name
+      (sql_identifier))
+     (sql_table_name
+      (sql_identifier))
+     (sql_table_name
+      (sql_identifier))))
    (sql_where_clause
     (sql_boolean_expr
      (sql_binary_expr
@@ -102,15 +103,15 @@ where venuename_sales > 800000
   (sql_select_statement
    (sql_select_clause
     (sql_column_list
-      (sql_identifier)))
+     (sql_identifier)))
    (sql_from_clause
     (sql_table_list
-    (sql_table_name
-     (sql_identifier))))
+     (sql_table_name
+      (sql_identifier))))
    (sql_where_clause
-     (sql_binary_expr
-       (sql_identifier)
-       (sql_identifier))))))
+    (sql_binary_expr
+     (sql_identifier)
+     (sql_identifier))))))
 
 ===
 redshift select with 2 ctes
@@ -166,12 +167,12 @@ order by venuename
       (sql_identifier))))
    (sql_from_clause
     (sql_table_list
-    (sql_table_name
-     (sql_identifier))
-    (sql_table_name
-     (sql_identifier))
-    (sql_table_name
-     (sql_identifier))))
+     (sql_table_name
+      (sql_identifier))
+     (sql_table_name
+      (sql_identifier))
+     (sql_table_name
+      (sql_identifier))))
    (sql_where_clause
     (sql_in_expr
      (sql_boolean_expr
@@ -198,8 +199,8 @@ order by venuename
          (sql_identifier)))
        (sql_from_clause
         (sql_table_list
-        (sql_table_name
-         (sql_identifier))))))))
+         (sql_table_name
+          (sql_identifier))))))))
     (sql_group_by_clause
      (sql_group_by_expression
       (sql_identifier)
@@ -253,8 +254,8 @@ with recursive john_org(id, name, manager_id, level) as
             (sql_identifier))))
          (sql_from_clause
           (sql_table_list
-          (sql_table_name
-           (sql_identifier))))
+           (sql_table_name
+            (sql_identifier))))
          (sql_where_clause
           (sql_binary_expr
            (sql_identifier)
@@ -278,12 +279,12 @@ with recursive john_org(id, name, manager_id, level) as
             (sql_identifier))))
          (sql_from_clause
           (sql_table_list
-          (sql_table_name
-           (sql_identifier)
-           (sql_identifier))
-          (sql_table_name
-           (sql_identifier)
-           (sql_identifier))))
+           (sql_table_name
+            (sql_identifier)
+            (sql_identifier))
+           (sql_table_name
+            (sql_identifier)
+            (sql_identifier))))
          (sql_where_clause
           (sql_boolean_expr
            (sql_binary_expr
@@ -303,8 +304,8 @@ with recursive john_org(id, name, manager_id, level) as
       (sql_identifier)))
     (sql_from_clause
      (sql_table_list
-     (sql_table_name
-      (sql_identifier))))
+      (sql_table_name
+       (sql_identifier))))
     (sql_order_by_clause
      (sql_order_by_expression
       (sql_identifier))))))

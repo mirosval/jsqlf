@@ -301,8 +301,7 @@ module.exports = grammar({
     ),
 
     sql_order_by_clause: $ => seq(
-      sql_kw('order'),
-      sql_kw('by'),
+      sql_kw('order by'),
       $.sql_order_by_expression,
     ),
 
@@ -314,8 +313,7 @@ module.exports = grammar({
     ),
 
     sql_group_by_clause: $ => seq(
-      sql_kw('group'),
-      sql_kw('by'),
+      sql_kw('group by'),
       $.sql_group_by_expression,
     ),
 
@@ -328,6 +326,10 @@ module.exports = grammar({
 
     sql_limit_clause: $ => seq(
       sql_kw('limit'),
+      $.sql_limit_expression,
+    ),
+
+    sql_limit_expression: $ => choice(
       $.sql_integer,
     ),
 
