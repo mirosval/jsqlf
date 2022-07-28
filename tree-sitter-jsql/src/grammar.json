@@ -985,6 +985,15 @@
         },
         {
           "type": "SYMBOL",
+          "name": "sql_where_expression"
+        }
+      ]
+    },
+    "sql_where_expression": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "SYMBOL",
           "name": "_sql_expr"
         }
       ]
@@ -1160,11 +1169,11 @@
         },
         {
           "type": "SYMBOL",
-          "name": "_sql_parens"
+          "name": "sql_parens"
         }
       ]
     },
-    "_sql_parens": {
+    "sql_parens": {
       "type": "SEQ",
       "members": [
         {

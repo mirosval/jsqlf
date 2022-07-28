@@ -297,6 +297,10 @@ module.exports = grammar({
 
     sql_where_clause: $ => seq(
       sql_kw('where'),
+      $.sql_where_expression,
+    ),
+
+    sql_where_expression: $ => seq(
       $._sql_expr,
     ),
 
@@ -342,10 +346,10 @@ module.exports = grammar({
       $.sql_binary_expr,
       $.sql_boolean_expr,
       $.sql_in_expr,
-      $._sql_parens,
+      $.sql_parens,
     ),
 
-    _sql_parens: $ => seq(
+    sql_parens: $ => seq(
       '(',
       $._sql_expr,
       ')',
